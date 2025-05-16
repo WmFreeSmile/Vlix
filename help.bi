@@ -1,0 +1,1 @@
+type bool as integer
