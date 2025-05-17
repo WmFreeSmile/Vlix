@@ -18,16 +18,21 @@ end sub
 
 
 sub test()
-	_ksleep(4000)
+	
+	/'
 	_kdisplay_print("Press the spacebar to get a random number")
 	dim nKeyCode as ubyte
 	while true
 		nKeyCode=_kdevice_keyboard_getkey()
 		if nKeyCode=VK_SPACE then
 			_kdisplay_print_ulong(GetRandNumber())
-		end if
+		end ISR_INTFRAME_REG_DS
 		_ksleep(200)
-	wend
+	wend'/
+	
+	
+	_kdisplay_print("HelloWorld")
+	
 end sub
 
 extern "c"
@@ -56,6 +61,7 @@ sub _kernel_entry cdecl()
 	_kidt_enable(true)
 	
 	test()
+	
 	/'
 	_kdisplay_print("sleep:")
 	
@@ -64,8 +70,7 @@ sub _kernel_entry cdecl()
 		_kdisplay_print_ulong(count)
 		count=count+1
 		_ksleep(1000)
-	wend
-	'/
+	wend'/
 	
 	_kernel_loop()
 end sub

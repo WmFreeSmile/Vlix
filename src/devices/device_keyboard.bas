@@ -69,7 +69,6 @@ sub _kdevice_keyboard_init()
     _klog_logo(TAG_KDEVICES,"Keyboard actived!")
 end sub
 
-
 function _kdevice_keyboard_map_scancode(uScanCode as ubyte) as ubyte
     if uScanCode<&h80 then
         function=_kdevice_scancodes(uScanCode)

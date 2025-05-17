@@ -1,9 +1,6 @@
 #include once "../include/display.bi"
 #include once "../include/log.bi"
 
-
-
-'log
 sub _klog_log(nLevel as integer,szTag as zstring ptr,szMessage as zstring ptr)
 	dim nCursorX as integer
 	dim nCursorY as integer
