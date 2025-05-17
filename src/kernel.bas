@@ -18,18 +18,16 @@ end sub
 
 
 sub test()
-	_kdisplay_print("test:")
-	
-	_kdisplay_print_ulong(malloc(4))
-	
-	_kdisplay_print_ulong(malloc(4))
-	
-	_kdisplay_print_ulong(malloc(4))
-	
-	_kdisplay_print_ulong(malloc(4))
-	
-	_kdisplay_print_ulong(malloc(4))
-	
+	_ksleep(4000)
+	_kdisplay_print("Press the spacebar to get a random number")
+	dim nKeyCode as ubyte
+	while true
+		nKeyCode=_kdevice_keyboard_getkey()
+		if nKeyCode=VK_SPACE then
+			_kdisplay_print_ulong(GetRandNumber())
+		end if
+		_ksleep(200)
+	wend
 end sub
 
 extern "c"
@@ -56,16 +54,6 @@ sub _kernel_entry cdecl()
 	_kidt_init()
 	_kdevices_init()
 	_kidt_enable(true)
-	
-	_kdisplay_print("rand:",false)
-
-	_kdisplay_print_ulong(GetRandNumber(),false)
-	_kdisplay_print(" ",false)
-	_kdisplay_print_ulong(GetRandNumber(),false)
-	_kdisplay_print(" ",false)
-	_kdisplay_print_ulong(GetRandNumber(),false)
-	_kdisplay_print(" ",false)
-	_kdisplay_print_ulong(GetRandNumber(),true)
 	
 	test()
 	/'

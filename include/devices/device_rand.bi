@@ -1,3 +1,4 @@
+#include once "../help.bi"
 
 const TAG_KRANDOM="RANDOM :"
 
