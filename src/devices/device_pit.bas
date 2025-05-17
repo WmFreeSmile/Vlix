@@ -1,13 +1,13 @@
-#include once "help.bi"
-#include once "device_pit.bi"
-#include once "log.bi"
-#include once "isr.bi"
-#include once "irq.bi"
-#include once "log.bi"
+#include once "../../include/help.bi"
+#include once "../../include/devices/device_pit.bi"
+#include once "../../include/log.bi"
+#include once "../../include/isr.bi"
+#include once "../../include/irq.bi"
+#include once "../../include/log.bi"
 
-#include once "devices.bi"
+#include once "../../include/devices/devices.bi"
 
-#include once "display.bi"
+#include once "../../include/display.bi"
 
 dim shared m_nShock as integer
 dim shared m_nTickCount as longint

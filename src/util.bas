@@ -1,5 +1,5 @@
-#include once "util.bi"
-#include once "crt.bi"
+#include once "../include/util.bi"
+#include once "../include/crt/crt.bi"
 
 Function pow_ulong(a As ULong, n As integer) As ULong
     If n = 0 Then Return 1

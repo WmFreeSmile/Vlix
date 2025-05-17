@@ -1,5 +1,5 @@
-#include once "help.bi"
-#include once "pic.bi"
+#include once "../include/help.bi"
+#include once "../include/pic.bi"
 
 sub _kpic_remap naked()
     asm

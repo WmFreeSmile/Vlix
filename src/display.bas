@@ -1,10 +1,10 @@
-#include once "help.bi"
+#include once "../include/help.bi"
 
-#include once "display.bi"
-#include once "log.bi"
-#include once "crt.bi"
+#include once "../include/display.bi"
+#include once "../include/log.bi"
+#include once "../include/crt/crt.bi"
 
-#include once "util.bi"
+#include once "../include/util.bi"
 
 dim shared m_nCursorX as integer
 dim shared m_nCursorY as integer
@@ -12,7 +12,6 @@ dim shared m_nCursorY as integer
 
 sub _kdisplay_init()
 	_kdisplay_clear()
-	
 	_kdisplay_cursor_update(0,0)
 	
 	_kdisplay_print("------------------------Welcome to Vlix------------------------",true)
@@ -40,10 +39,9 @@ sub _kdisplay_print(lpszString as zstring ptr,bEndLine as bool=true)
 		if nCharacter=0 then
 			if bEndLine then
 				m_nCursorX=0
-				
 				m_nCursorY=m_nCursorY+1
 				if m_nCursorY>DISPLAY_HEIGHT-1 then
-					m_nCursorY=DISPLAY_HEIGHT-1
+					m_nCursorY=DISPLAY_HEIGHT
 					_kdisplay_scroll()
 				end if
 			end if
@@ -53,26 +51,27 @@ sub _kdisplay_print(lpszString as zstring ptr,bEndLine as bool=true)
 			m_nCursorX=0
 			m_nCursorY=m_nCursorY+1
 			if m_nCursorY>DISPLAY_HEIGHT-1 then
-				m_nCursorY=DISPLAY_HEIGHT-1
+				m_nCursorY=DISPLAY_HEIGHT
 				_kdisplay_scroll()
 			end if
 			continue do
 		elseif nCharacter=13 then
 			continue do
 		else
-			
 			m_nCursorX=m_nCursorX+1
 			if m_nCursorX>=DISPLAY_WIDTH then
 				m_nCursorX=0
 				m_nCursorY=m_nCursorY+1
 				if m_nCursorY>DISPLAY_HEIGHT-1 then
-					m_nCursorY=DISPLAY_HEIGHT-1
+					m_nCursorY=DISPLAY_HEIGHT
 					_kdisplay_scroll()
 				end if
 			end if
+			
+			cast(ubyte ptr,KERNEL_KDISPLAY_BASEADDR)[(m_nCursorY*DISPLAY_WIDTH+m_nCursorX)*2]=nCharacter
 		end if
 		
-		cast(ubyte ptr,KERNEL_KDISPLAY_BASEADDR)[(m_nCursorY*DISPLAY_WIDTH+m_nCursorX)*2]=nCharacter
+		
 		
 	loop while nCharacter<>0
 	_kdisplay_cursor_update(m_nCursorX,m_nCursorY)

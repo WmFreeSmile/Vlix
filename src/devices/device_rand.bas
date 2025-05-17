@@ -1,9 +1,9 @@
-#include once "help.bi"
-#include once "device_rand.bi"
-#include once "log.bi"
-#include once "util.bi"
+#include once "../../include/help.bi"
+#include once "../../include/devices/device_rand.bi"
+#include once "../../include/log.bi"
+#include once "../../include/util.bi"
 
-#include once "device_pit.bi"
+#include once "../../include/devices/device_pit.bi"
 
 dim shared m_blSupportedRdrand as bool
 

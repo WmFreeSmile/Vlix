@@ -1,14 +1,14 @@
 
 
-#include once "help.bi"
+#include once "../include/help.bi"
 
-#include once "crt.bi"
-#include once "display.bi"
-#include once "log.bi"
-#include once "memory.bi"
-#include once "idt.bi"
-#include once "devices.bi"
-#include once "util.bi"
+#include once "../include/crt/crt.bi"
+#include once "../include/display.bi"
+#include once "../include/log.bi"
+#include once "../include/memory.bi"
+#include once "../include/idt.bi"
+#include once "../include/devices/devices.bi"
+#include once "../include/util.bi"
 
 sub _kernel_loop()
 	asm
@@ -17,6 +17,20 @@ sub _kernel_loop()
 end sub
 
 
+sub test()
+	_kdisplay_print("test:")
+	
+	_kdisplay_print_ulong(malloc(4))
+	
+	_kdisplay_print_ulong(malloc(4))
+	
+	_kdisplay_print_ulong(malloc(4))
+	
+	_kdisplay_print_ulong(malloc(4))
+	
+	_kdisplay_print_ulong(malloc(4))
+	
+end sub
 
 extern "c"
 
@@ -53,17 +67,17 @@ sub _kernel_entry cdecl()
 	_kdisplay_print(" ",false)
 	_kdisplay_print_ulong(GetRandNumber(),true)
 	
+	test()
+	/'
 	_kdisplay_print("sleep:")
 	
-	_kdisplay_print("1")
-	_ksleep(1000)
-	_kdisplay_print("2")
-	_ksleep(1000)
-	_kdisplay_print("3")
-	_ksleep(1000)
-	_kdisplay_print("4")
-	_ksleep(1000)
-	_kdisplay_print("5")
+	dim count as integer
+	while true
+		_kdisplay_print_ulong(count)
+		count=count+1
+		_ksleep(1000)
+	wend
+	'/
 	
 	_kernel_loop()
 end sub

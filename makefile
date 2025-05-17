@@ -4,63 +4,118 @@ LD=ld
 OBJCOPY=objcopy
 
 #请配置工具链
-TARGET=./system.img
 
-#$$$$$$$$$$$$$$$$$$
-$(TARGET):./bootsect.o ./kernel.o ./display.o ./crt.o ./log.o ./memory.o ./idt.o ./isr.o ./pic.o ./devices.o ./device_rand.o ./util.o ./device_pit.o
+ifeq ($(OS),Windows_NT)
+    RM := del /S /Q
+    RMDIR := rmdir /S /Q
+else
+    RM := rm -f
+    RMDIR := rm -rf
+endif
+
+
+#设置目录变量
+INC_DIR=./include/
+SRC_DIR=./src/
+TARGET_DIR=./target/
+
+#设置目标文件
+TARGET=$(TARGET_DIR)system.img
+
+CFLAGS = -c#声明编译的选项
+LFLAG = -m i386pe#链接器选项
+
+#指定目标，其实可有可无
+all:$(TARGET)
+
+
+$(TARGET): $(TARGET_DIR)bootsect.o \
+			$(TARGET_DIR)display.o \
+			$(TARGET_DIR)idt.o \
+			$(TARGET_DIR)isr.o \
+			$(TARGET_DIR)kernel.o \
+			$(TARGET_DIR)log.o \
+			$(TARGET_DIR)memory.o \
+			$(TARGET_DIR)pic.o \
+			$(TARGET_DIR)util.o \
+								\
+			$(TARGET_DIR)crt/crt.o \
+			$(TARGET_DIR)devices/device_keyboard.o \
+			$(TARGET_DIR)devices/device_pit.o \
+			$(TARGET_DIR)devices/device_rand.o \
+			$(TARGET_DIR)devices/devices.o
 	
-#$$$$$$$$$$$$$$$$$$
-	$(LD) -m i386pe bootsect.o kernel.o display.o crt.o log.o memory.o idt.o isr.o pic.o devices.o device_rand.o util.o device_pit.o -e _entry -Ttext 0x7c00 -o ./system.img
-#链接文件，bootsect必须在前面，不知道为啥，在后面系统就进不去
+	$(LD) $(LFLAG) $(TARGET_DIR)bootsect.o \
+					$(TARGET_DIR)display.o \
+					$(TARGET_DIR)idt.o \
+					$(TARGET_DIR)isr.o \
+					$(TARGET_DIR)kernel.o \
+					$(TARGET_DIR)log.o \
+					$(TARGET_DIR)memory.o \
+					$(TARGET_DIR)pic.o \
+					$(TARGET_DIR)util.o \
+										\
+					$(TARGET_DIR)crt/crt.o \
+					$(TARGET_DIR)devices/device_keyboard.o \
+					$(TARGET_DIR)devices/device_pit.o \
+					$(TARGET_DIR)devices/device_rand.o \
+					$(TARGET_DIR)devices/devices.o \
+					-e _entry -Ttext 0x7c00 -o $(TARGET)
+	$(OBJCOPY) -O binary $(TARGET)
 	
-	$(OBJCOPY) -O binary ./system.img
-#将目标文件转换成纯二进制文件
 
 
-#$$$$$$$$$$$$$$$$$$
-./kernel.o:./kernel.bas
-	$(FBC) ./kernel.bas -c -v -o ./kernel.o
-
-./display.o:./display.bas
-	$(FBC) ./display.bas -c -v -o ./display.o
-
-./crt.o:./crt.bas
-	$(FBC) ./crt.bas -c -v -o ./crt.o
-
-./log.o:./log.bas
-	$(FBC) ./log.bas -c -v -o ./log.o
-
-./memory.o:./memory.bas
-	$(FBC) ./memory.bas -c -v -o ./memory.o
-
-./idt.o:./idt.bas
-	$(FBC) ./idt.bas -c -v -o ./idt.o
-
-./isr.o:./isr.bas
-	$(FBC) ./isr.bas -c -v -o ./isr.o
-
-./pic.o:./pic.bas
-	$(FBC) ./pic.bas -c -v -o ./pic.o
-
-./devices.o:./devices.bas
-	$(FBC) ./devices.bas -c -v -o ./devices.o
-
-./device_rand.o:./device_rand.bas
-	$(FBC) ./device_rand.bas -c -v -o ./device_rand.o
-
-./util.o:./util.bas
-	$(FBC) ./util.bas -c -v -o ./util.o
+$(TARGET_DIR)display.o \
+$(TARGET_DIR)idt.o \
+$(TARGET_DIR)isr.o \
+$(TARGET_DIR)kernel.o \
+$(TARGET_DIR)log.o \
+$(TARGET_DIR)memory.o \
+$(TARGET_DIR)pic.o \
+$(TARGET_DIR)util.o \
+					\
+$(TARGET_DIR)crt/crt.o \
+$(TARGET_DIR)devices/device_keyboard.o \
+$(TARGET_DIR)devices/device_pit.o \
+$(TARGET_DIR)devices/device_rand.o \
+$(TARGET_DIR)devices/devices.o \
+	: $(SRC_DIR)display.bas \
+		$(SRC_DIR)idt.bas \
+		$(SRC_DIR)isr.bas \
+		$(SRC_DIR)kernel.bas \
+		$(SRC_DIR)log.bas \
+		$(SRC_DIR)memory.bas \
+		$(SRC_DIR)pic.bas \
+		$(SRC_DIR)util.bas \
+							\
+		$(SRC_DIR)crt/crt.bas \
+		$(SRC_DIR)devices/device_keyboard.bas \
+		$(SRC_DIR)devices/device_pit.bas \
+		$(SRC_DIR)devices/device_rand.bas \
+		$(SRC_DIR)devices/devices.bas 
 	
-./device_pit.o:./device_pit.bas
-	$(FBC) ./device_pit.bas -c -v -o ./device_pit.o
-
-./bootsect.o:./bootsect.s
-	$(AS) --32 ./bootsect.s -o ./bootsect.o
+	mkdir .\target\crt
+	mkdir .\target\devices
+	
+	$(FBC) $(CFLAGS) $(SRC_DIR)display.bas -o $(TARGET_DIR)/display.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)idt.bas -o $(TARGET_DIR)idt.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)isr.bas -o $(TARGET_DIR)isr.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)kernel.bas -o $(TARGET_DIR)kernel.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)log.bas -o $(TARGET_DIR)log.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)memory.bas -o $(TARGET_DIR)memory.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)pic.bas -o $(TARGET_DIR)pic.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)util.bas -o $(TARGET_DIR)util.o
+	
+	$(FBC) $(CFLAGS) $(SRC_DIR)crt/crt.bas -o $(TARGET_DIR)crt/crt.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)devices/device_keyboard.bas -o $(TARGET_DIR)devices/device_keyboard.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)devices/device_pit.bas -o $(TARGET_DIR)devices/device_pit.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)devices/device_rand.bas -o $(TARGET_DIR)devices/device_rand.o
+	$(FBC) $(CFLAGS) $(SRC_DIR)devices/devices.bas -o $(TARGET_DIR)devices/devices.o
+	
+$(TARGET_DIR)bootsect.o:$(SRC_DIR)bootsect.s
+	$(AS) --32 $(SRC_DIR)bootsect.s -o $(TARGET_DIR)bootsect.o
 
 .PHONY:clean
 clean:
-
-
-#$$$$$$$$$$$$$$$$$$
-	del .\system.img .\bootsect.o .\kernel.o .\display.o .\crt.o .\log.o .\memory.o .\idt.o .\isr.o .\pic.o .\devices.o .\device_rand.o .\util.o .\device_pit.o
-
+	$(RMDIR) target
+	mkdir target

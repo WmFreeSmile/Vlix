@@ -1,10 +1,10 @@
-#include once "help.bi"
+#include once "../include/help.bi"
 
-#include once "idt.bi"
-#include once "crt.bi"
-#include once "log.bi"
-#include once "isr.bi"
-#include once "pic.bi"
+#include once "../include/idt.bi"
+#include once "../include/crt/crt.bi"
+#include once "../include/log.bi"
+#include once "../include/isr.bi"
+#include once "../include/pic.bi"
 
 dim shared m_lpIdtDescr as integer
 dim shared m_lpIdtTable as integer

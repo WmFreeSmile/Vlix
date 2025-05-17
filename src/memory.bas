@@ -1,5 +1,5 @@
-#include once "memory.bi"
-#include once "log.bi"
+#include once "../include/memory.bi"
+#include once "../include/log.bi"
 
 dim shared m_lpRecBaseAddr as integer
 dim shared m_lpMemBaseAddr as integer
@@ -8,7 +8,6 @@ dim shared m_lpCurrentAddr as integer
 dim shared m_nAllocatedCount as integer
 dim shared m_nAllocatedMemSize as integer
 
-'memory
 
 sub _kmemory_init()
 	m_lpRecBaseAddr=KERNEL_KMEMORY_BASEADDR
@@ -44,7 +43,7 @@ function _kmemory_malloc(nSizeBytes as integer) as integer
 	m_nAllocatedCount=m_nAllocatedCount+1
 	m_nAllocatedMemSize=m_nAllocatedMemSize+nSizeBytes
 	
-	return lpMemory
+	function=lpMemory
 end function
 
 function _kmemory_realloc(lpMemory as integer,nSizeBytes as integer) as integer
@@ -52,7 +51,7 @@ function _kmemory_realloc(lpMemory as integer,nSizeBytes as integer) as integer
 		return 0
 	end if
 	
-	return 0
+	function=0
 end function
 
 sub _kmemory_free(lpMemory as integer)

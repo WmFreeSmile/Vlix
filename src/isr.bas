@@ -1,9 +1,9 @@
-#include once "help.bi"
-#include once "isr.bi"
-#include once "log.bi"
-#include once "idt.bi"
-#include once "gdt.bi"
-#include once "irq.bi"
+#include once "../include/help.bi"
+#include once "../include/isr.bi"
+#include once "../include/log.bi"
+#include once "../include/idt.bi"
+#include once "../include/gdt.bi"
+#include once "../include/irq.bi"
 
 dim shared m_IsrHandlers(15) as sub(as integer)
 
@@ -113,7 +113,6 @@ sub _kisr_handler(lpIntStackFrame as integer)
 end sub
 
 
-#include once "display.bi"
 
 function _kisr_get_service(nIndex as ubyte) as sub()
     dim _kisr_fault_table(47) as sub() ={ _
@@ -131,22 +130,6 @@ function _kisr_get_service(nIndex as ubyte) as sub()
         @_kisr_irq40,@_kisr_irq41,@_kisr_irq42,@_kisr_irq43, _
         @_kisr_irq44,@_kisr_irq45,@_kisr_irq46,@_kisr_irq47 _
     }
-    /'
-    _kdisplay_print_ulong(cast(ulong,_kisr_fault_table(16)),false)
-    _kdisplay_print(" ",false)
-    _kdisplay_print_ulong(cast(ulong,_kisr_fault_table(17)),false)
-    _kdisplay_print(" ",false)
-    _kdisplay_print_ulong(cast(ulong,_kisr_fault_table(18)),false)
-    
-    _kdisplay_print(" ",false)
-    _kdisplay_print(" ",false)
-    
-    _kdisplay_print_ulong(cast(ulong,@_kisr_irq_fault16),false)
-    _kdisplay_print(" ",false)
-    _kdisplay_print_ulong(cast(ulong,@_kisr_irq_fault17),false)
-    _kdisplay_print(" ",false)
-    _kdisplay_print_ulong(cast(ulong,@_kisr_irq_fault18),true)
-    '/
     function=iif(nIndex<=47,_kisr_fault_table(nIndex),@_kisr_unknown)
 end function
 

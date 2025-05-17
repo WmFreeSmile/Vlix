@@ -1,5 +1,5 @@
-#include once "display.bi"
-#include once "log.bi"
+#include once "../include/display.bi"
+#include once "../include/log.bi"
 
 
 
