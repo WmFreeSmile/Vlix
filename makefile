@@ -28,7 +28,6 @@ LFLAG = -m i386pe#链接器选项
 #指定目标，其实可有可无
 all:$(TARGET)
 
-
 $(TARGET): $(TARGET_DIR)bootsect.o \
 			$(TARGET_DIR)display.o \
 			$(TARGET_DIR)idt.o \
