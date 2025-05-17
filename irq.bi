@@ -1,5 +1,5 @@
 
-const TAG_KIRQ="IRQ    "   '輸出標志
+const TAG_KIRQ="IRQ    :"   '輸出標志
 
 const IRQ_PIT=0   '可編程的坑233 (可編程定時器)
 const IRQ_KEYBOARD=1   '鍵盤中斷

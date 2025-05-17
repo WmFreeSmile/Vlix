@@ -20,7 +20,6 @@ end sub
 
 extern "c"
 
-
 sub _kernel_entry cdecl()
 	asm
 		mov ax, 0x0010
@@ -44,15 +43,15 @@ sub _kernel_entry cdecl()
 	_kdevices_init()
 	_kidt_enable(true)
 	
-	
 	_kdisplay_print("rand:",false)
-	_kdisplay_print_ulong(_kdevice_rand_next(),false)
+
+	_kdisplay_print_ulong(GetRandNumber(),false)
 	_kdisplay_print(" ",false)
-	_kdisplay_print_ulong(_kdevice_rand_next(),false)
+	_kdisplay_print_ulong(GetRandNumber(),false)
 	_kdisplay_print(" ",false)
-	_kdisplay_print_ulong(_kdevice_rand_next(),false)
+	_kdisplay_print_ulong(GetRandNumber(),false)
 	_kdisplay_print(" ",false)
-	_kdisplay_print_ulong(_kdevice_rand_next(),true)
+	_kdisplay_print_ulong(GetRandNumber(),true)
 	
 	_kdisplay_print("sleep:")
 	

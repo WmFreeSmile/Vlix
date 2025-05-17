@@ -1,5 +1,5 @@
 
-const TAG_KISR="ISR    "
+const TAG_KISR="ISR    :"
 
 const ISR_SIZEOF_INTFRAME=52
 const ISR_INTFRAME_REG_GS=0

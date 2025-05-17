@@ -1,6 +1,9 @@
 #include once "help.bi"
 #include once "device_rand.bi"
 #include once "log.bi"
+#include once "util.bi"
+
+#include once "device_pit.bi"
 
 dim shared m_blSupportedRdrand as bool
 
@@ -45,11 +48,24 @@ function _kdevice_rand_next_rdrand naked() as integer
     end asm
 end function
 
-function _kdevice_rand_next() as integer
-    if m_blSupportedRdrand then
-        function=_kdevice_rand_next_rdrand()
-    else
-        '伪随机数
-        function=0
-    end if
+function rand_IsSupportedRdrand() as bool
+    function=m_blSupportedRdrand
+end function
+
+
+dim shared TickRecord(7) as longint
+dim shared RecordIndex as integer
+
+'封装随机数函数
+function GetRandNumber() as integer
+	if m_blSupportedRdrand then
+		function=_kdevice_rand_next_rdrand()
+	else
+		TickRecord(RecordIndex)=GetTickCount()
+		RecordIndex=RecordIndex+1
+		if RecordIndex>ubound(TickRecord) then
+			RecordIndex=0
+		end if
+		function=CRC32(@TickRecord(0),ARRAYSIZE(TickRecord)*sizeof(longint))
+	end if
 end function

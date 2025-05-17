@@ -26,3 +26,20 @@ Sub ulong2string(value As ULong, z As ZString Ptr)
         End If
     Next
 End Sub
+
+
+function CRC32(pBuffer as any ptr,size as integer) as integer
+	dim value as integer=4294967295
+	for i as integer=0 to size-1
+		value=value xor cast(integer,cast(ubyte ptr,pBuffer)[i])
+		
+		for j as integer=0 to 7
+			if (value and 1)=1 then
+				value=((value shr 1) and 2147483647) xor 3988292384
+			else
+				value=(value shr 1) and 2147483647
+			end if
+		next
+	next
+	function=value
+end function

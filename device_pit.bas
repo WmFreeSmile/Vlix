@@ -16,15 +16,13 @@ sub __callback_kdevice_pit(lpIntStackFrame as integer)
     m_nShock=m_nShock+1
     m_nTickCount=m_nTickCount+1
     
-    '_kdisplay_print("tick")
-    
-    if m_nShock=100 then m_nShock=0
+    if m_nShock=1000 then m_nShock=0
 end sub
 
 sub _kdevice_pit_init()
     _kisr_install(IRQ_PIT,@__callback_kdevice_pit)
     
-    _kdevice_pit_frequency(200)
+    _kdevice_pit_frequency(1000)
     
     _klog_logo(TAG_KDEVICES,"Timer actived!")
 end sub
@@ -55,8 +53,13 @@ sub _kdevice_pit_frequency(nFreqHz as integer)
 end sub
 
 sub _ksleep(nMilliSecond as integer)
-    dim nTickCount as longint=m_nTickCount+nMilliSecond\10
+    dim nTickCount as longint=m_nTickCount+nMilliSecond
     
     while nTickCount>=m_nTickCount : wend
     
 end sub
+
+
+function GetTickCount() as longint
+    function=m_nTickCount
+end function
