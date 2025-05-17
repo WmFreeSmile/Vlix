@@ -12,7 +12,7 @@ sub _kisr_irq_fault##i naked()
     asm
         xchg bx,bx
         cli
-        push ##i
+        push i
         jmp _kisr_stub
     end asm
 end sub
@@ -22,7 +22,7 @@ end sub
 sub _kisr_irq##i naked()
     asm
         cli
-        push ##i
+        push i
         jmp _kisr_stub
     end asm
 end sub
@@ -84,76 +84,10 @@ sub _kisr_unknown naked()
 end sub
 
 sub _kisr_handler(lpIntStackFrame as integer)
-    dim nIntIndex as ubyte=*cast(long ptr,lpIntStackFrame)
+    dim nIntIndex as ubyte=cast(long ptr,lpIntStackFrame)[ISR_INTFRAME_INT]
     
-    if nIntIndex<=31 then
-        
-        select case nIntIndex
-            case 0
-                _klog_logd(TAG_KISR,"Exception occurred_0!")
-            case 1
-                _klog_logd(TAG_KISR,"Exception occurred_1!")
-            case 2
-                _klog_logd(TAG_KISR,"Exception occurred_2!")
-            case 3
-                _klog_logd(TAG_KISR,"Exception occurred_3!")
-            case 4
-                _klog_logd(TAG_KISR,"Exception occurred_4!")
-            case 5
-                _klog_logd(TAG_KISR,"Exception occurred_5!")
-            case 6
-                _klog_logd(TAG_KISR,"Exception occurred_6!")
-            case 7
-                _klog_logd(TAG_KISR,"Exception occurred_7!")
-            case 8
-                _klog_logd(TAG_KISR,"Exception occurred_8!")
-            case 9
-                _klog_logd(TAG_KISR,"Exception occurred_9!")
-            case 10
-                _klog_logd(TAG_KISR,"Exception occurred_10!")
-            case 11
-                _klog_logd(TAG_KISR,"Exception occurred_11!")
-            case 12
-                _klog_logd(TAG_KISR,"Exception occurred_12!")
-            case 13
-                _klog_logd(TAG_KISR,"Exception occurred_13!")
-            case 14
-                _klog_logd(TAG_KISR,"Exception occurred_14!")
-            case 15
-                _klog_logd(TAG_KISR,"Exception occurred_15!")
-            case 16
-                _klog_logd(TAG_KISR,"Exception occurred_16!")
-            case 17
-                _klog_logd(TAG_KISR,"Exception occurred_17!")
-            case 18
-                _klog_logd(TAG_KISR,"Exception occurred_18!")
-            case 19
-                _klog_logd(TAG_KISR,"Exception occurred_19!")
-            case 20
-                _klog_logd(TAG_KISR,"Exception occurred_20!")
-            case 21
-                _klog_logd(TAG_KISR,"Exception occurred_21!")
-            case 22
-                _klog_logd(TAG_KISR,"Exception occurred_22!")
-            case 23
-                _klog_logd(TAG_KISR,"Exception occurred_23!")
-            case 24
-                _klog_logd(TAG_KISR,"Exception occurred_24!")
-            case 25
-                _klog_logd(TAG_KISR,"Exception occurred_25!")
-            case 26
-                _klog_logd(TAG_KISR,"Exception occurred_26!")
-            case 27
-                _klog_logd(TAG_KISR,"Exception occurred_27!")
-            case 28
-                _klog_logd(TAG_KISR,"Exception occurred_28!")
-            case 29
-                _klog_logd(TAG_KISR,"Exception occurred_29!")
-            case 30
-                _klog_logd(TAG_KISR,"Exception occurred_30!")
-            case 31
-                _klog_logd(TAG_KISR,"Exception occurred_31!")
-        end select
+    if nIntIndex<=31 Then
+        _klog_logd(TAG_KISR,"Exception occurred_0!")
         return
     end if
     
@@ -178,6 +112,9 @@ sub _kisr_handler(lpIntStackFrame as integer)
     
 end sub
 
+
+#include once "display.bi"
+
 function _kisr_get_service(nIndex as ubyte) as sub()
     dim _kisr_fault_table(47) as sub() ={ _
         @_kisr_irq_fault0,@_kisr_irq_fault1,@_kisr_irq_fault2,@_kisr_irq_fault3, _
@@ -194,13 +131,32 @@ function _kisr_get_service(nIndex as ubyte) as sub()
         @_kisr_irq40,@_kisr_irq41,@_kisr_irq42,@_kisr_irq43, _
         @_kisr_irq44,@_kisr_irq45,@_kisr_irq46,@_kisr_irq47 _
     }
+    /'
+    _kdisplay_print_ulong(cast(ulong,_kisr_fault_table(16)),false)
+    _kdisplay_print(" ",false)
+    _kdisplay_print_ulong(cast(ulong,_kisr_fault_table(17)),false)
+    _kdisplay_print(" ",false)
+    _kdisplay_print_ulong(cast(ulong,_kisr_fault_table(18)),false)
     
+    _kdisplay_print(" ",false)
+    _kdisplay_print(" ",false)
+    
+    _kdisplay_print_ulong(cast(ulong,@_kisr_irq_fault16),false)
+    _kdisplay_print(" ",false)
+    _kdisplay_print_ulong(cast(ulong,@_kisr_irq_fault17),false)
+    _kdisplay_print(" ",false)
+    _kdisplay_print_ulong(cast(ulong,@_kisr_irq_fault18),true)
+    '/
     function=iif(nIndex<=47,_kisr_fault_table(nIndex),@_kisr_unknown)
 end function
 
 sub _kisr_reset()
     for i as integer=0 to 255
-        _kidt_install(i,IDT_GATE_INT,IDT_FLAG_DEFAULT,GDT_SELECTOR_CODE32,_kisr_get_service(i))
+        _kidt_install(i, _ 
+            IDT_GATE_INT, _
+            IDT_FLAG_DEFAULT, _
+            GDT_SELECTOR_CODE32, _
+            _kisr_get_service(i))
     next
     _klog_logo(TAG_KISR,"Reset ISR service.")
 end sub

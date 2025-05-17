@@ -44,6 +44,7 @@ sub _kernel_entry cdecl()
 	_kdevices_init()
 	_kidt_enable(true)
 	
+	
 	_kdisplay_print("rand:",false)
 	_kdisplay_print_ulong(_kdevice_rand_next(),false)
 	_kdisplay_print(" ",false)
@@ -53,8 +54,6 @@ sub _kernel_entry cdecl()
 	_kdisplay_print(" ",false)
 	_kdisplay_print_ulong(_kdevice_rand_next(),true)
 	
-	'failed
-	/'
 	_kdisplay_print("sleep:")
 	
 	_kdisplay_print("1")
@@ -66,10 +65,8 @@ sub _kernel_entry cdecl()
 	_kdisplay_print("4")
 	_ksleep(1000)
 	_kdisplay_print("5")
-	'/
 	
 	_kernel_loop()
 end sub
-
 
 end extern

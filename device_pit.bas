@@ -16,7 +16,7 @@ sub __callback_kdevice_pit(lpIntStackFrame as integer)
     m_nShock=m_nShock+1
     m_nTickCount=m_nTickCount+1
     
-    _kdisplay_print("tick")
+    '_kdisplay_print("tick")
     
     if m_nShock=100 then m_nShock=0
 end sub
