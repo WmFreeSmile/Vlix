@@ -13,6 +13,11 @@ else
     RMDIR := rm -rf
 endif
 
+ifeq ($(OS),Windows_NT)
+    CHECK_DIR = @if not exist "$1" (mkdir "$1" & echo Created directory: $1)
+else
+    CHECK_DIR = @if [ ! -d "$1" ]; then mkdir -p "$1"; echo Created directory: $1; fi
+endif
 
 #设置目录变量
 INC_DIR=./include/
@@ -26,8 +31,11 @@ CFLAGS = -c#声明编译的选项
 LFLAG = -m i386pe#链接器选项
 
 #指定目标，其实可有可无
-all:$(TARGET)
+all:CHECK_DIR $(TARGET)
 
+CHECK_DIR:
+	$(call CHECK_DIR,target)
+	
 $(TARGET): $(TARGET_DIR)bootsect.o \
 			$(TARGET_DIR)display.o \
 			$(TARGET_DIR)idt.o \
@@ -117,4 +125,3 @@ $(TARGET_DIR)bootsect.o:$(SRC_DIR)bootsect.s
 .PHONY:clean
 clean:
 	$(RMDIR) target
-	mkdir target
