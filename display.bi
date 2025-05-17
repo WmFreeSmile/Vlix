@@ -13,6 +13,7 @@ const KERNEL_KDISPLAY_LIMITADDR=&h8BFA0
 declare sub _kdisplay_init()
 declare sub _kdisplay_clear()
 declare sub _kdisplay_print(lpszString as zstring ptr,bEndLine as bool=true)
+declare sub _kdisplay_print_ulong(lpszString as ulong,bEndLine as bool=true)
 declare sub _kdisplay_attribute_set(nPosX as integer,nPosY as integer,nAttribute as ubyte,nLength as integer=1)
 declare sub _kdisplay_cursor(byref nPosX as integer,byref nPosY as integer)
 declare sub _kdisplay_cursor_update(nPosX as integer,nPosY as integer)

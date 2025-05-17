@@ -43,3 +43,15 @@ end sub
 sub _klog_logo(szTag as zstring ptr,szMessage as zstring ptr)
 	_klog_log(KERNEL_KLOG_LEVELO,szTag,szMessage)
 end sub
+
+sub _klog_logw(szTag as zstring ptr,szMessage as zstring ptr)
+	_klog_log(KERNEL_KLOG_LEVELW,szTag,szMessage)
+end sub
+
+sub _klog_loge(szTag as zstring ptr,szMessage as zstring ptr)
+	_klog_log(KERNEL_KLOG_LEVELE,szTag,szMessage)
+end sub
+
+sub _klog_logf(szTag as zstring ptr,szMessage as zstring ptr)
+	_klog_log(KERNEL_KLOG_LEVELF,szTag,szMessage)
+end sub

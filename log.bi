@@ -8,3 +8,6 @@ const KERNEL_KLOG_LEVELF=5
 declare sub _klog_log(nLevel as integer,szTag as zstring ptr,szMessage as zstring ptr)
 declare sub _klog_logd(szTag as zstring ptr,szMessage as zstring ptr)
 declare sub _klog_logo(szTag as zstring ptr,szMessage as zstring ptr)
+declare sub _klog_logw(szTag as zstring ptr,szMessage as zstring ptr)
+declare sub _klog_loge(szTag as zstring ptr,szMessage as zstring ptr)
+declare sub _klog_logf(szTag as zstring ptr,szMessage as zstring ptr)

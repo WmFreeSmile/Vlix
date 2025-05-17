@@ -4,12 +4,11 @@
 #include once "log.bi"
 #include once "crt.bi"
 
+#include once "util.bi"
+
 dim shared m_nCursorX as integer
 dim shared m_nCursorY as integer
 
-
-
-'display
 
 sub _kdisplay_init()
 	_kdisplay_clear()
@@ -79,6 +78,12 @@ sub _kdisplay_print(lpszString as zstring ptr,bEndLine as bool=true)
 	_kdisplay_cursor_update(m_nCursorX,m_nCursorY)
 end sub
 
+sub _kdisplay_print_ulong(lpszString as ulong,bEndLine as bool=true)
+	dim text as zstring*10
+	ulong2string(lpszString,text)
+	_kdisplay_print(text,bEndLine)
+end sub
+
 sub _kdisplay_attribute_set(nPosX as integer,nPosY as integer,nAttribute as ubyte,nLength as integer=1)
 	dim lpMemoryBase as integer=KERNEL_KDISPLAY_BASEADDR+(nPosY*DISPLAY_WIDTH+nPosX)*2+1
 	
@@ -131,7 +136,7 @@ sub _kdisplay_scroll()
 	nStride=DISPLAY_WIDTH*2
 	nMoveSize=nStride*(DISPLAY_HEIGHT-1)
 	
-	memcpy(KERNEL_KDISPLAY_BASEADDR,KERNEL_KDISPLAY_BASEADDR+nStride,nMoveSize)
+	memcpy(cast(any ptr,KERNEL_KDISPLAY_BASEADDR),cast(any ptr,KERNEL_KDISPLAY_BASEADDR+nStride),nMoveSize)
 	
 	lpBaseAddr=KERNEL_KDISPLAY_BASEADDR+nMoveSize
 	for i as integer=0 to DISPLAY_WIDTH-1
