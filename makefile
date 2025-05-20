@@ -25,7 +25,7 @@ SRC_DIR=./src/
 TARGET_DIR=./target/
 
 #设置目标文件
-TARGET=$(TARGET_DIR)system.img
+TARGET=$(TARGET_DIR)floppy.img
 
 CFLAGS = -c#声明编译的选项
 LFLAG = -m i386pe#链接器选项
@@ -50,7 +50,9 @@ $(TARGET): $(TARGET_DIR)bootsect.o \
 			$(TARGET_DIR)devices/device_keyboard.o \
 			$(TARGET_DIR)devices/device_pit.o \
 			$(TARGET_DIR)devices/device_rand.o \
-			$(TARGET_DIR)devices/devices.o
+			$(TARGET_DIR)devices/devices.o \
+										\
+			$(TARGET_DIR)fbrt/fbrt.o
 	
 	$(LD) $(LFLAG) $(TARGET_DIR)bootsect.o \
 					$(TARGET_DIR)display.o \
@@ -67,7 +69,10 @@ $(TARGET): $(TARGET_DIR)bootsect.o \
 					$(TARGET_DIR)devices/device_pit.o \
 					$(TARGET_DIR)devices/device_rand.o \
 					$(TARGET_DIR)devices/devices.o \
+												\
+					$(TARGET_DIR)fbrt/fbrt.o \
 					-e _entry -Ttext 0x7c00 -o $(TARGET)
+	
 	$(OBJCOPY) -O binary $(TARGET)
 	
 
@@ -86,6 +91,8 @@ $(TARGET_DIR)devices/device_keyboard.o \
 $(TARGET_DIR)devices/device_pit.o \
 $(TARGET_DIR)devices/device_rand.o \
 $(TARGET_DIR)devices/devices.o \
+							\
+$(TARGET_DIR)fbrt/fbrt.o \
 	: $(SRC_DIR)display.bas \
 		$(SRC_DIR)idt.bas \
 		$(SRC_DIR)isr.bas \
@@ -99,10 +106,14 @@ $(TARGET_DIR)devices/devices.o \
 		$(SRC_DIR)devices/device_keyboard.bas \
 		$(SRC_DIR)devices/device_pit.bas \
 		$(SRC_DIR)devices/device_rand.bas \
-		$(SRC_DIR)devices/devices.bas 
+		$(SRC_DIR)devices/devices.bas \
+								\
+		$(SRC_DIR)fbrt/fbrt.bas
 	
 	mkdir .\target\crt
 	mkdir .\target\devices
+	
+	mkdir .\target\fbrt
 	
 	$(FBC) $(CFLAGS) $(SRC_DIR)display.bas -o $(TARGET_DIR)/display.o
 	$(FBC) $(CFLAGS) $(SRC_DIR)idt.bas -o $(TARGET_DIR)idt.o
@@ -118,6 +129,13 @@ $(TARGET_DIR)devices/devices.o \
 	$(FBC) $(CFLAGS) $(SRC_DIR)devices/device_pit.bas -o $(TARGET_DIR)devices/device_pit.o
 	$(FBC) $(CFLAGS) $(SRC_DIR)devices/device_rand.bas -o $(TARGET_DIR)devices/device_rand.o
 	$(FBC) $(CFLAGS) $(SRC_DIR)devices/devices.bas -o $(TARGET_DIR)devices/devices.o
+	
+	$(FBC) $(CFLAGS) $(SRC_DIR)fbrt/fbrt.bas -o $(TARGET_DIR)fbrt/fbrt.o
+
+#过了编译，再把符号名改回来
+	$(OBJCOPY) $(TARGET_DIR)fbrt/fbrt.o --redefine-sym _fb_ArrayErase_bak@4=_fb_ArrayErase@4
+	$(OBJCOPY) $(TARGET_DIR)fbrt/fbrt.o --redefine-sym _fb_ErrorSetNum_bak@4=_fb_ErrorSetNum@4
+	
 	
 $(TARGET_DIR)bootsect.o:$(SRC_DIR)bootsect.s
 	$(AS) --32 $(SRC_DIR)bootsect.s -o $(TARGET_DIR)bootsect.o

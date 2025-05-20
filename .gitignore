@@ -2,7 +2,7 @@
 tools/
 target/
 
-run.bat
+bochsrc.bxrc
 
 *.o
 *.img

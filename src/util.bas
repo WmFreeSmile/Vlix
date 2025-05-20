@@ -27,7 +27,7 @@ Sub ulong2string(value As ULong, z As ZString Ptr)
     Next
 End Sub
 
-
+'CRC32校验算法，用来生成摘要
 function CRC32(pBuffer as any ptr,size as integer) as integer
 	dim value as integer=4294967295
 	for i as integer=0 to size-1

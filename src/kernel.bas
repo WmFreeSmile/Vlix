@@ -18,20 +18,16 @@ end sub
 
 
 sub test()
-	
-	/'
+	_kdisplay_print("HelloWorld")
 	_kdisplay_print("Press the spacebar to get a random number")
 	dim nKeyCode as ubyte
 	while true
 		nKeyCode=_kdevice_keyboard_getkey()
 		if nKeyCode=VK_SPACE then
 			_kdisplay_print_ulong(GetRandNumber())
-		end ISR_INTFRAME_REG_DS
+		end if
 		_ksleep(200)
-	wend'/
-	
-	
-	_kdisplay_print("HelloWorld")
+	wend
 	
 end sub
 
